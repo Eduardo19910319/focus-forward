@@ -1,12 +1,45 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { BottomNav } from "@/components/BottomNav";
+import { HojeScreen } from "@/screens/HojeScreen";
+import { VisaoScreen } from "@/screens/VisaoScreen";
+import { RitualScreen } from "@/screens/RitualScreen";
+import { PerfilScreen } from "@/screens/PerfilScreen";
+
+type TabType = "hoje" | "visao" | "ritual" | "perfil";
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState<TabType>("hoje");
+
+  const renderScreen = () => {
+    switch (activeTab) {
+      case "hoje":
+        return <HojeScreen />;
+      case "visao":
+        return <VisaoScreen />;
+      case "ritual":
+        return <RitualScreen />;
+      case "perfil":
+        return <PerfilScreen />;
+      default:
+        return <HojeScreen />;
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.2 }}
+        >
+          {renderScreen()}
+        </motion.div>
+      </AnimatePresence>
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
 };
